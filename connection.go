@@ -450,10 +450,10 @@ func (v *connection) initializeSSL(sslFlag string) error {
 	switch sslFlag {
 	case "server":
 		connectionLogger.Info("enabling SSL/TLS server mode")
-		v.conn = tls.Client(v.conn, &tls.Config{InsecureSkipVerify: true})
+		v.conn = tls.Client(v.conn, &tls.Config{InsecureSkipVerify: true, Renegotiation: tls.RenegotiateFreelyAsClient})
 	case "server-strict":
 		connectionLogger.Info("enabling SSL/TLS server strict mode")
-		v.conn = tls.Client(v.conn, &tls.Config{ServerName: v.connURL.Hostname()})
+		v.conn = tls.Client(v.conn, &tls.Config{ServerName: v.connURL.Hostname(), Renegotiation: tls.RenegotiateFreelyAsClient})
 	default:
 		err := fmt.Errorf("unsupported tlsmode flag: %s - should be 'server', 'server-strict' or 'none'", sslFlag)
 		connectionLogger.Error(err.Error())
